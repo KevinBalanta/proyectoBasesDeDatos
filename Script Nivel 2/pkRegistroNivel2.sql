@@ -134,8 +134,10 @@ CREATE OR REPLACE PACKAGE BODY pkregistronivel2 AS
         comentariofuncionario   VARCHAR2(50);
         numerosolicitud         solicitud.n_solicitud%TYPE;
         causa                   VARCHAR2(50);
+	numero			NUMBER;
     BEGIN
-        numerosolicitud := TO_CHAR(sequence_id_solicitud.nextval);
+	numero := 0;
+        numerosolicitud := TO_CHAR(pksolicitudn1.fsecuencia(numero));
         causa := ivcausa;
         fechaasignacion := SYSDATE;
         estadocodigo := '3';

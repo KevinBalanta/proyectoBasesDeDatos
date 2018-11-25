@@ -32,9 +32,5 @@ public class ViewPrincipal {
     public Button getButIngresar() {
     	return butIngresar;
     }
-    
-    public TextField geTextFieldCedula() {
-    	return txtCedula;
-    }
 	
 }

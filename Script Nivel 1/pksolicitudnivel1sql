@@ -1,4 +1,4 @@
-CREATE OR REPLACE PACKAGE pksolicitudn1 IS
+﻿CREATE OR REPLACE PACKAGE pksolicitudn1 IS
 --[declaración de objetos públicos]
     PROCEDURE pinsertarsolicitud (
         n_solicitud             VARCHAR2,
@@ -75,6 +75,10 @@ CREATE OR REPLACE PACKAGE pksolicitudn1 IS
     FUNCTION fconsultar (
         cod_solicitud VARCHAR2
     ) RETURN solicitud%rowtype;
+
+FUNCTION fsecuencia(
+	ivnumb NUMBER
+  )RETURN NUMBER;
 
 --[declaración de subprogramas]
 
@@ -282,6 +286,13 @@ CREATE OR REPLACE PACKAGE BODY pksolicitudn1 IS
             s.funcionario_cedula = cedf;
 
     END darsolicitudes;
+
+	FUNCTION fsecuencia(
+	ivNumber NUMBER)RETURN NUMBER IS 
+	numee NUMBER;
+	BEGIN 
+		SELECT sequence_id_solicitud.NEXTVAL into numee FROM DUAL;
+	END fsecuencia;
 --[definición de subprogramas]
 
 END pksolicitudn1;

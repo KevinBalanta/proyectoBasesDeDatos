@@ -10,33 +10,36 @@ CREATE OR REPLACE PACKAGE pkasigancionnivel2 IS
 
 END pkasigancionnivel2;
 /
-
 CREATE OR REPLACE PACKAGE BODY pkasigancionnivel2 IS
 
     PROCEDURE pasignacionautomatica (
         ividsolicitud IN VARCHAR2
     ) IS
-        cedulafuncionario   VARCHAR(50);
-        cantidad            NUMBER;
-        datosnumero         NUMBER;
-        parametro           NUMBER;
-        vrecorrido          NUMBER;
+        cedulafuncionario VARCHAR(50);
+        cantidad      NUMBER;
+        datosnumero   NUMBER;
+        parametro NUMBER;
     BEGIN
-        vrecorrido := 0;
-        SELECT
-            COUNT(cedula)
-       INTO datosnumero
-        FROM
-            funcionario;
-
-        WHILE vrecorrido < datosnumero LOOP
+        INSERT INTO tabla ( id )
             SELECT
-                cedula
+                id
+            FROM
+                funcionario;
+
+        SELECT
+            COUNT(*)
+        INTO datosnumero
+        FROM
+            tabla;
+
+        WHILE datosnumero > 0 LOOP
+            SELECT
+                top(1) id
             INTO cedulafuncionario
             FROM
-                funcionario
-            WHERE
-                ROWNUM = vrecorrido;
+                tabla
+            ORDER BY
+                id;
 
             cantidad := pksolicitudn1.darsolicitudes(cedulafuncionario);
             parametro := pkparametrizacion.fconsultar(1).NUMEROSOLICITUDESFUNCIONARIO;
@@ -44,7 +47,16 @@ CREATE OR REPLACE PACKAGE BODY pkasigancionnivel2 IS
                 pksolicitudn1.pmodificarsolicitudasignacion(ividsolicitud,cedulafuncionario);
                 datosnumero := 0;
             ELSE
-                vrecorrido := vrecorrido + 1;
+                DELETE tabla
+                WHERE
+                    id = cedulafuncionario;
+
+                SELECT
+                    COUNT(*)
+                INTO datosnumero
+                FROM
+                    tabla;
+
             END IF;
 
         END LOOP;
